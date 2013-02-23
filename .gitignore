@@ -1,3 +1,9 @@
+# R
+.Rdata
+.Rhistory
+Rplots.pdf
+
+# Python
 *.py[cod]
 
 # C extensions
