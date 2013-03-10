@@ -1,6 +1,7 @@
 # Regress using Vowpal Wabbit
 
 # Parameters
+vwopt=-b24
 l1=1.7e-7
 
 all: data/error.tab data/valid-yhat.tab
@@ -41,7 +42,7 @@ data/valid.vw: data/train_plus_valid.vw
 		data/train_plus_valid.vw $@ 999999 244768
 
 %/model.vw: %/train.vw
-	vw -d $< -c -f $@ --readable_model $@.txt -b 24 --passes 20 --l1 $(l1)
+	vw -d $< -c -f $@ --readable_model $@.txt $(vwopt) --passes 20 --l1 $(l1)
 
 %-yhat-log.tab: %.vw data/model.vw
 	vw -t -d $< -c -i data/model.vw -p $@
@@ -52,8 +53,8 @@ data/valid.vw: data/train_plus_valid.vw
 %/error.tab: %/train-y.tab %/train-yhat.tab %/test-y.tab %/test-yhat.tab
 	./calculate-error.R >$@
 
-%/audit.txt: %/train.vw %/model.vw
-	vw -a -t -d $< -i $*/model.vw -p /dev/null >$@
+%/audit.txt: %/train.vw
+	vw -a -t -d $< -p /dev/null $(vwopt) >$@
 
 %/audit.tab: %/audit.txt
 	fmt -1 $< |gawk -F: '/:/ {x[$$1] = $$2} END {for (i in x) print x[i] "\t" i}' |sort -n >$@
