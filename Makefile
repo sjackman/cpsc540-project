@@ -36,7 +36,7 @@ data/valid.vw: data/train_plus_valid.vw
 		data/train_plus_valid.vw $@ 999999 244768
 
 %/model.vw: %/train.vw
-	vw -d $< -c -f $@ --passes 20
+	vw -d $< -c -f $@ --readable_model $@.txt -b 24 --passes 20
 
 %-yhat-log.tab: %.vw data/model.vw
 	vw -t -d $< -c -i data/model.vw -p $@
