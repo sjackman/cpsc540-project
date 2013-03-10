@@ -1,3 +1,8 @@
+# Regress using Vowpal Wabbit
+
+# Parameters
+l1=1.7e-7
+
 all: data/error.tab data/valid-yhat.tab
 
 .PHONY: all
@@ -36,7 +41,7 @@ data/valid.vw: data/train_plus_valid.vw
 		data/train_plus_valid.vw $@ 999999 244768
 
 %/model.vw: %/train.vw
-	vw -d $< -c -f $@ --readable_model $@.txt -b 24 --passes 20
+	vw -d $< -c -f $@ --readable_model $@.txt -b 24 --passes 20 --l1 $(l1)
 
 %-yhat-log.tab: %.vw data/model.vw
 	vw -t -d $< -c -i data/model.vw -p $@
@@ -48,16 +53,16 @@ data/valid.vw: data/train_plus_valid.vw
 	./calculate-error.R >$@
 
 %/audit.txt: %/train.vw %/model.vw
-	vw -a -t -d $< -c -i $*/model.vw -p /dev/null >$@
+	vw -a -t -d $< -i $*/model.vw -p /dev/null >$@
 
 %/audit.tab: %/audit.txt
-	fmt -1 $< |awk -F: '/:/ {x[$1] = $2} END {for (i in x) print x[i] "\t" i}' |sort -n >$@
+	fmt -1 $< |gawk -F: '/:/ {x[$$1] = $$2} END {for (i in x) print x[i] "\t" i}' |sort -n >$@
 
 %/model.vw.tab: %/model.vw.txt
 	gsed -n '13,$$s/:/\t/p' <$< >$@
 
 %/model.tab: %/audit.tab %/model.vw.tab
-	gawk 'ARGIND==1 {x[$$1] = $$2} ARGIND>1 {print x[$$1] "\t" exp($$2)}' $^ |sort -rnk2 >$@
+	gawk 'ARGIND==1 {x[$$1] = $$2} ARGIND>1 {print $$1 "\t" x[$$1] "\t" exp($$2)}' $^ |sort -rnk3 >$@
 
 data/unlog_predictions.txt: data/Valid.csv data/Train.csv
 	python kaggle-advertised-salaries/add_dummy_salaries.py data/Valid.csv data/Valid_with_dummy_salaries.csv
