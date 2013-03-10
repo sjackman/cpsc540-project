@@ -47,6 +47,18 @@ data/valid.vw: data/train_plus_valid.vw
 %/error.tab: %/train-y.tab %/train-yhat.tab %/test-y.tab %/test-yhat.tab
 	./calculate-error.R >$@
 
+%/audit.txt: %/train.vw %/model.vw
+	vw -a -t -d $< -c -i $*/model.vw -p /dev/null >$@
+
+%/audit.tab: %/audit.txt
+	fmt -1 $< |awk -F: '/:/ {x[$1] = $2} END {for (i in x) print x[i] "\t" i}' |sort -n >$@
+
+%/model.vw.tab: %/model.vw.txt
+	gsed -n '13,$$s/:/\t/p' <$< >$@
+
+%/model.tab: %/audit.tab %/model.vw.tab
+	gawk 'ARGIND==1 {x[$$1] = $$2} ARGIND>1 {print x[$$1] "\t" exp($$2)}' $^ |sort -rnk2 >$@
+
 data/unlog_predictions.txt: data/Valid.csv data/Train.csv
 	python kaggle-advertised-salaries/add_dummy_salaries.py data/Valid.csv data/Valid_with_dummy_salaries.csv
 	cat data/Train.csv data/Valid_with_dummy_salaries.csv >data/train_plus_valid.csv
