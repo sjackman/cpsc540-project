@@ -4,9 +4,10 @@ from __future__ import division
 from numpy import arange
 import os
 
-# Optimize the L1 regularization parameter.
-#l1s = [1e-8, 2e-8, 5e-8, 1e-7, 2e-7, 5e-7, 1e-6]
-l1s = arange(1, 5, 0.1) * 1e-7
+# Parameters
+l1 = 1.7e-7
+l2 = 0
+xs = range(40, 70, 10) # passes
 
 def removef(path):
 	try:
@@ -15,16 +16,16 @@ def removef(path):
 		pass
 
 e = []
-for l1 in l1s:
-	print '==> lambda_1 = %g <==' % l1
+for passes in xs:
+	print '==> lambda_1=%g lambda_2=%g passes=%u <==' % (l1, l2, passes)
 	removef('data/model.vw')
-	cmd = 'make l1=%g data/model.vw data/error.tab' % l1
+	cmd = 'make l1=%g l2=%g passes=%u data/model.vw data/error.tab' % (l1, l2, passes)
 	print cmd
 	os.system(cmd)
 	f = open('data/error.tab', 'r')
 	e.append(f.readline().split())
 	print e[-1]
 
-print "\nl1\te_train\te_test"
-for l1, e in zip(l1s, e):
-	print "%g\t%s\t%s" % (l1, e[0], e[1])
+print "\nl1\tl2\tpasses\te_train\te_test"
+for passes, e in zip(xs, e):
+	print "%g\t%g\t%u\t%s\t%s" % (l1, l2, passes, e[0], e[1])
