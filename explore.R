@@ -29,8 +29,13 @@ train.data$abs.error <- abs(train.data$yhat - train.data$y)
 summary(train.data$abs.error)
 
 test.data <- cbind(test.y, test.yhat)
+test.data$error <- test.data$yhat - test.data$y
+summary(test.data$error)
+histogram(test.data$error, nint=25)
+
 test.data$abs.error <- abs(test.data$yhat - test.data$y)
 summary(test.data$abs.error)
-
 histogram(test.data$abs.error, nint=25)
+
+densityplot(~ y + yhat, test.data, auto.key=T, plot.points=F)
 hexbinplot(yhat ~ y, test.data)

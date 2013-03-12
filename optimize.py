@@ -5,9 +5,9 @@ from numpy import arange
 import os
 
 # Parameters
-l1 = 1.7e-7
+xs = arange(1.0, 2.0, 0.1) * 1e-7 # l1
 l2 = 0
-xs = range(40, 70, 10) # passes
+passes = 50
 
 def removef(path):
 	try:
@@ -16,7 +16,7 @@ def removef(path):
 		pass
 
 e = []
-for passes in xs:
+for l1 in xs:
 	print '==> lambda_1=%g lambda_2=%g passes=%u <==' % (l1, l2, passes)
 	removef('data/model.vw')
 	cmd = 'make l1=%g l2=%g passes=%u data/model.vw data/error.tab' % (l1, l2, passes)
@@ -27,5 +27,5 @@ for passes in xs:
 	print e[-1]
 
 print "\nl1\tl2\tpasses\te_train\te_test"
-for passes, e in zip(xs, e):
+for l1, e in zip(xs, e):
 	print "%g\t%g\t%u\t%s\t%s" % (l1, l2, passes, e[0], e[1])

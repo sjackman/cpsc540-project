@@ -2,7 +2,7 @@
 
 # Parameters
 vwopt=-b24
-l1=1.7e-7
+l1=1.4e-7
 l2=0
 passes=50
 
