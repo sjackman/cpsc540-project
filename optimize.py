@@ -5,7 +5,7 @@ from numpy import arange
 import os
 
 # Parameters
-xs = arange(1.0, 2.0, 0.1) * 1e-7 # l1
+xs = arange(1.0e-7, 1.5e-7, 0.1e-7) # l1
 l2 = 0
 passes = 50
 

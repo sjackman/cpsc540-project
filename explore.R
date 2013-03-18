@@ -39,3 +39,4 @@ histogram(test.data$abs.error, nint=25)
 
 densityplot(~ y + yhat, test.data, auto.key=T, plot.points=F)
 hexbinplot(yhat ~ y, test.data)
+qqplot(test.data$y, test.data$yhat)

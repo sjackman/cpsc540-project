@@ -2,8 +2,9 @@
 
 # Parameters
 vwopt=-b24
-l1=1.4e-7
+l1=1.2e-7
 l2=0
+nn=2
 passes=50
 
 all: data/error.tab data/valid-yhat.tab
@@ -51,11 +52,11 @@ data/valid.vw: data/train_plus_valid.vw
 
 %/all-model.vw: %/all.vw
 	vw -d $< -c -f $@ --readable_model $@.txt $(vwopt) \
-		--passes $(passes) --l1 $(l1) --l2 $(l2)
+		--passes $(passes) --l1 $(l1) --l2 $(l2) --nn $(nn)
 
 %/model.vw: %/train.vw
 	vw -d $< -c -f $@ --readable_model $@.txt $(vwopt) \
-		--passes $(passes) --l1 $(l1) --l2 $(l2)
+		--passes $(passes) --l1 $(l1) --l2 $(l2) --nn $(nn)
 
 %-yhat-log.tab: %.vw data/model.vw
 	vw -t -d $< -c -i data/model.vw -p $@ $(vwopt)
