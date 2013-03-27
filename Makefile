@@ -20,7 +20,7 @@ all: data/error.tab data/valid-yhat.tab
 	tail -n+2 $< |cut -d, -f1 >$@
 
 %/all-y.tab: %/Train.csv
-	csvprintf '%1$$s\t%11$$s\n' <$< >$@
+	./csvtotab.py <$< |cut -f1,14 >$@
 
 %/train-y.tab: %/all-y.tab
 	head -n200001 $< >$@
@@ -29,7 +29,7 @@ all: data/error.tab data/valid-yhat.tab
 	sed -n '1p;200002,$$p' $< >$@
 
 %.vw: %.csv
-	python kaggle-advertised-salaries/2vw.py $< $@
+	python kaggle-advertised-salaries/2vw_loc.py $< $@
 
 data/train_plus_valid.csv: data/Train.csv data/Valid.csv
 	python kaggle-advertised-salaries/add_dummy_salaries.py data/Valid.csv data/Valid_with_dummy_salaries.csv
@@ -39,16 +39,13 @@ data/all.vw: data/train_plus_valid.vw
 	head -n244768 $< >$@
 
 data/train.vw: data/train_plus_valid.vw
-	python kaggle-advertised-salaries/first.py \
-		data/train_plus_valid.vw $@ 200000
+	python kaggle-advertised-salaries/first.py $< $@ 200000
 
 data/test.vw: data/train_plus_valid.vw
-	python kaggle-advertised-salaries/first.py \
-		data/train_plus_valid.vw $@ 44768 200000
+	python kaggle-advertised-salaries/first.py $< $@ 44768 200000
 
 data/valid.vw: data/train_plus_valid.vw
-	python kaggle-advertised-salaries/first.py \
-		data/train_plus_valid.vw $@ 999999 244768
+	python kaggle-advertised-salaries/first.py $< $@ 999999 244768
 
 %/all-model.vw: %/all.vw
 	vw -d $< -c -f $@ --readable_model $@.txt $(vwopt) \
