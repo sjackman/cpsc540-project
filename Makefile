@@ -47,6 +47,10 @@ data/cross.vw: data/train_plus_valid.vw
 data/valid.vw: data/train_plus_valid.vw
 	python kaggle-advertised-salaries/first.py $< $@ 999999 244768
 
+data/%.csv: data/%-nosalary.csv
+	head -n1 data/train.csv >$@
+	python kaggle-advertised-salaries/add_dummy_salaries.py $< /dev/stdout >>$@
+
 %/all-model.vw: %/all.vw
 	vw -d $< -c -f $@ --readable_model $@.txt $(vwopt) \
 		--passes $(passes) --l1 $(l1) --l2 $(l2) --nn $(nn) $(VWFLAGS)
@@ -62,6 +66,12 @@ data/valid.vw: data/train_plus_valid.vw
 	vw -t -d $< -c -i data/all-model.vw -p $@ $(vwopt)
 
 %/all-valid-yhat.csv: %/valid.id %/all-valid-yhat.tab
+	(echo Id,SalaryNormalized; paste -d, $^) >$@
+
+%/all-test-yhat-log.tab: %/test.vw %/all-model.vw
+	vw -t -d $< -c -i data/all-model.vw -p $@ $(vwopt)
+
+%/all-test-yhat.csv: %/test.id %/all-test-yhat.tab
 	(echo Id,SalaryNormalized; paste -d, $^) >$@
 
 %.tab: %-log.tab
