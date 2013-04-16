@@ -1,12 +1,16 @@
-e_train	e_cross	e_valid	notes
-4057.265	7566.658	NA	-b18 --passes 20
-3404.208	7195.052	NA	-b24 --passes 20
-4433.67	6494.423	NA	-b24 --passes 20 --l1 1.7e-7
-4475.986	6408.116	5979.79221	-b24 --passes 50 --l1 1.7e-7
-4124.072	6391.232	5895.56250	-b24 --passes 50 --l1 1.4e-7
-3912.037	6284.755	5817.64869	-b24 --passes 50 --l1 1.2e-7 --nn 2
-3416.815	6552.131	NA	-b24 --passes 50 --l1 0 --nn 30 --dropout
-4104.473	6324.992	NA	-b24 --passes 50 --l1 1.1e-9 --nn 30 --dropout
-3902.658	6322.835	NA	-b24 --passes 50 --l1 1.1e-9 --nn 26 --dropout
-4112.094	6315.569	NA	-b24 --passes 50 --l1 1.4e-9 --nn 26 --dropout
-3947.181	6312.173	NA	-b24 --passes 60 --l1 1.4e-9 --nn 26 --dropout
+e_train	e_cross	e_valid	e_test	notes
+4057.265	7566.658	NA	NA	-b18 --passes 20
+3404.208	7195.052	NA	NA	-b24 --passes 20
+4433.67	6494.423	NA	NA	-b24 --passes 20 --l1 1.7e-7
+4475.986	6408.116	5979.79221	NA	-b24 --passes 50 --l1 1.7e-7
+4124.072	6391.232	5895.56250	NA	-b24 --passes 50 --l1 1.4e-7
+3912.037	6284.755	5817.64869	NA	-b24 --passes 50 --l1 1.2e-7 --nn 2
+3416.815	6552.131	NA	NA	-b24 --passes 50 --l1 0 --nn 30 --dropout
+4104.473	6324.992	NA	NA	-b24 --passes 50 --l1 1.1e-9 --nn 30 --dropout
+3902.658	6322.835	NA	NA	-b24 --passes 50 --l1 1.1e-9 --nn 26 --dropout
+4112.094	6315.569	NA	NA	-b24 --passes 50 --l1 1.4e-9 --nn 26 --dropout
+3947.181	6312.173	NA	NA	-b24 --passes 60 --l1 1.4e-9 --nn 26 --dropout
+3534.883	7182.871	NA	6376.09151	-b24 --passes 20
+4205.242	6399.763	NA	5945.05173	-b24 --passes 50 --l1 1.4e-7
+4022.87	6268.922	NA	5868.64058	-b24 --passes 50 --l1 1.2e-7 --nn 2
+4033.714	6315.66	NA	5876.81939	-b24 --passes 60 --l1 1.4e-9 --nn 26 --dropout
