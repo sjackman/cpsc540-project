@@ -10,5 +10,3 @@ e_train	e_test	e_valid	notes
 3902.658	6322.835	NA	-b24 --passes 50 --l1 1.1e-9 --nn 26 --dropout
 4112.094	6315.569	NA	-b24 --passes 50 --l1 1.4e-9 --nn 26 --dropout
 3947.181	6312.173	NA	-b24 --passes 60 --l1 1.4e-9 --nn 26 --dropout
-# Expand the location data
-3901.826	6277.758	5819.94011	-b24 --passes 50 --l1 1.2e-7 --nn 2
