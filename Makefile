@@ -19,21 +19,21 @@ all: data/error.tab data/valid-yhat.tab
 %.id: %.csv
 	tail -n+2 $< |cut -d, -f1 >$@
 
-%/all-y.tab: %/Train.csv
+%/all-y.tab: %/train.csv
 	./csvtotab.py <$< |cut -f1,11 >$@
 
 %/train-y.tab: %/all-y.tab
 	head -n200001 $< >$@
 
-%/test-y.tab: %/all-y.tab
+%/cross-y.tab: %/all-y.tab
 	sed -n '1p;200002,$$p' $< >$@
 
 %.vw: %.csv
 	python kaggle-advertised-salaries/2vw.py $< $@
 
-data/train_plus_valid.csv: data/Train.csv data/Valid.csv
-	python kaggle-advertised-salaries/add_dummy_salaries.py data/Valid.csv data/Valid_with_dummy_salaries.csv
-	cat data/Train.csv data/Valid_with_dummy_salaries.csv >$@
+data/train_plus_valid.csv: data/train.csv data/valid.csv
+	python kaggle-advertised-salaries/add_dummy_salaries.py data/valid.csv data/valid_with_dummy_salaries.csv
+	cat data/train.csv data/valid_with_dummy_salaries.csv >$@
 
 data/all.vw: data/train_plus_valid.vw
 	head -n244768 $< >$@
@@ -41,7 +41,7 @@ data/all.vw: data/train_plus_valid.vw
 data/train.vw: data/train_plus_valid.vw
 	python kaggle-advertised-salaries/first.py $< $@ 200000
 
-data/test.vw: data/train_plus_valid.vw
+data/cross.vw: data/train_plus_valid.vw
 	python kaggle-advertised-salaries/first.py $< $@ 44768 200000
 
 data/valid.vw: data/train_plus_valid.vw
@@ -67,7 +67,7 @@ data/valid.vw: data/train_plus_valid.vw
 %.tab: %-log.tab
 	./exp.R <$< >$@
 
-%/error.tab: %/train-y.tab %/train-yhat.tab %/test-y.tab %/test-yhat.tab
+%/error.tab: %/train-y.tab %/train-yhat.tab %/cross-y.tab %/cross-yhat.tab
 	./calculate-error.R >$@
 
 %/audit.txt: %/train.vw
@@ -82,9 +82,9 @@ data/valid.vw: data/train_plus_valid.vw
 %/model.tab: %/audit.tab %/model.vw.tab
 	gawk 'ARGIND==1 {x[$$1] = $$2} ARGIND>1 {print $$1 "\t" x[$$1] "\t" exp($$2)}' $^ |sort -rnk3 >$@
 
-data/unlog_predictions.txt: data/Valid.csv data/Train.csv
-	python kaggle-advertised-salaries/add_dummy_salaries.py data/Valid.csv data/Valid_with_dummy_salaries.csv
-	cat data/Train.csv data/Valid_with_dummy_salaries.csv >data/train_plus_valid.csv
+data/unlog_predictions.txt: data/valid.csv data/train.csv
+	python kaggle-advertised-salaries/add_dummy_salaries.py data/valid.csv data/valid_with_dummy_salaries.csv
+	cat data/train.csv data/valid_with_dummy_salaries.csv >data/train_plus_valid.csv
 	python kaggle-advertised-salaries/2vw.py data/train_plus_valid.csv data/train_plus_valid.vw
 	python kaggle-advertised-salaries/first.py data/train_plus_valid.vw data/train.vw 244768
 	python kaggle-advertised-salaries/first.py data/train_plus_valid.vw data/valid.vw 999999999 244768

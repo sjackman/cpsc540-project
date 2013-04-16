@@ -1,4 +1,4 @@
-e_train	e_test	e_valid	notes
+e_train	e_cross	e_valid	notes
 4057.265	7566.658	NA	-b18 --passes 20
 3404.208	7195.052	NA	-b24 --passes 20
 4433.67	6494.423	NA	-b24 --passes 20 --l1 1.7e-7
